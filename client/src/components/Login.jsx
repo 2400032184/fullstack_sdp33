@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
-=======
-import React, { useState } from "react";
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
 import Navbar from "./Navbar";
 import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -10,17 +6,14 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const Login = () => {
   const navigate = useNavigate();
 
-  // Input state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-<<<<<<< HEAD
   // CAPTCHA states
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
 
-  // Generate random captcha
   const generateCaptcha = () => {
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
     setCaptcha(random);
@@ -33,7 +26,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // CAPTCHA validation first
+    // CAPTCHA validation
     if (captchaInput !== captcha) {
       alert("Incorrect CAPTCHA! Please try again.");
       generateCaptcha();
@@ -41,29 +34,21 @@ const Login = () => {
       return;
     }
 
-=======
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const storedUsers =
+      JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
-    const storedUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
-
-    // Find matching user
     const matchedUser = storedUsers.find(
-      (user) => user.username === username && user.password === password
+      (user) =>
+        user.username === username && user.password === password
     );
 
     if (!matchedUser) {
-      const userExists = storedUsers.find((user) => user.username === username);
+      const userExists = storedUsers.find(
+        (user) => user.username === username
+      );
 
       if (!userExists) {
-<<<<<<< HEAD
         if (window.confirm("User not registered! Go to Sign Up page?")) {
-=======
-        if (
-          window.confirm("User not registered! Go to Sign Up page?")
-        ) {
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
           navigate("/signup");
         }
       } else {
@@ -72,10 +57,7 @@ const Login = () => {
       return;
     }
 
-    // Store logged-in user
     localStorage.setItem("currentUser", JSON.stringify(matchedUser));
-
-    // Trigger storage event so Navbar updates
     window.dispatchEvent(new Event("storage"));
 
     alert(`Welcome, ${matchedUser.username}!`);
@@ -117,8 +99,6 @@ const Login = () => {
               </span>
             </div>
 
-<<<<<<< HEAD
-            {/* CAPTCHA UI ADDED BELOW */}
             <label>Enter CAPTCHA</label>
             <div
               style={{
@@ -140,7 +120,9 @@ const Login = () => {
               type="text"
               placeholder="Enter CAPTCHA shown above"
               value={captchaInput}
-              onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
+              onChange={(e) =>
+                setCaptchaInput(e.target.value.toUpperCase())
+              }
               required
               style={{ marginBottom: "15px" }}
             />
@@ -161,8 +143,6 @@ const Login = () => {
               Refresh CAPTCHA
             </button>
 
-=======
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
             <button type="submit">Login</button>
           </form>
 
@@ -175,10 +155,6 @@ const Login = () => {
         </div>
       </div>
 
-<<<<<<< HEAD
-      {/* YOUR ORIGINAL CSS BELOW — unchanged */}
-=======
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
       <style>{`
         body, html {
           margin: 0;
@@ -201,11 +177,7 @@ const Login = () => {
           background: #ffffff;
           padding: 30px 25px;
           border-radius: 15px;
-<<<<<<< HEAD
           max-width: 500px;
-=======
-          max-width: 400px;
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
           width: 100%;
           max-height: 100%;
           overflow: hidden;
