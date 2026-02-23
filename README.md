@@ -1,3 +1,7 @@
+Deployment Link: https://fullstack-sdp33-d9j8.vercel.app/
+
+Open this App in the Desktop for better user experience
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
