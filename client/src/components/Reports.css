@@ -2,13 +2,13 @@
   padding: 40px 20px;
   font-family: 'Arial', sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f0f4f8, #e0f7fa);
+  background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
   text-align: center;
 }
 
 h1 {
   font-size: 2.5rem;
-  color: #4a148c;
+  color: #123c5a;
   margin-bottom: 10px;
 }
 
@@ -22,7 +22,7 @@ h1 {
 }
 
 .chart-card {
-  background: #fff;
+  background: #ffffff;
   padding: 10px;
   border-radius: 15px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@ h1 {
 .summary-card {
   display: flex;
   justify-content: space-between;
-  background: #fff;
+  background: #ffffff;
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -51,15 +51,17 @@ h1 {
 
 .summary-left {
   max-width: 70%;
+  color: #123c5a;
 }
 
 .summary-right {
   max-width: 25%;
   text-align: center;
+  color: #1f6f8b;
 }
 
 .stars {
-  color: #ffb347;
+  color: #ffb347; /* Keep gold stars */
 }
 
 .suggestions-section {
@@ -73,19 +75,21 @@ h1 {
 
 .suggestions-section h2 {
   margin-bottom: 20px;
-  color: #4a148c;
+  color: #123c5a;
 }
 
 .suggestion-card {
-  background: #fff;
+  background: #ffffff;
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   margin-bottom: 15px;
+  color: #1f6f8b;
 }
 
 .suggestion-card p {
   margin: 5px 0;
+  color: #4a6572;
 }
 
 @media (max-width: 768px) {

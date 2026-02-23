@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -66,7 +66,9 @@ const AdminLogin = () => {
               type="text"
               placeholder="Enter CAPTCHA shown above"
               value={captchaInput}
-              onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
+              onChange={(e) =>
+                setCaptchaInput(e.target.value.toUpperCase())
+              }
               required
               style={{
                 marginBottom: "15px",
@@ -85,7 +87,7 @@ const AdminLogin = () => {
                 padding: "10px",
                 borderRadius: "6px",
                 border: "none",
-                background: "#6a00abff",
+                background: "#1f6f8b",
                 color: "#fff",
                 cursor: "pointer",
               }}
@@ -97,7 +99,8 @@ const AdminLogin = () => {
           </form>
 
           <p className="signup-link">
-            Are you the User? click here <a href="/Login">User Login</a>
+            Are you the User? click here{" "}
+            <Link to="/Login">User Login</Link>
           </p>
         </div>
       </div>
@@ -115,7 +118,7 @@ const AdminLogin = () => {
           justify-content: center;
           align-items: center;
           height: 90vh;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
+          background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
           padding: 0 20px;
           box-sizing: border-box;
         }
@@ -124,7 +127,7 @@ const AdminLogin = () => {
           background: #ffffff;
           padding: 30px 25px;
           border-radius: 15px;
-          max-width: 500px;
+          max-width: 600px;
           width: 100%;
           max-height: 100%;
           overflow: hidden;
@@ -171,7 +174,7 @@ const AdminLogin = () => {
           padding: 12px;
           border-radius: 8px;
           border: none;
-          background: #28a745;
+          background: #123c5a;
           color: #fff;
           font-weight: bold;
           cursor: pointer;
@@ -180,7 +183,7 @@ const AdminLogin = () => {
         }
 
         .login-form button:hover {
-          background: #218838;
+          background: #1f6f8b;
         }
 
         .signup-link {
@@ -189,7 +192,7 @@ const AdminLogin = () => {
         }
 
         .signup-link a {
-          color: #28a745;
+          color: #123c5a;
           text-decoration: underline;
         }
 

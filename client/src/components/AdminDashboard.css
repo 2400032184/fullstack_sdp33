@@ -5,13 +5,13 @@
   --transition-func: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Pastel color palette */
-  --body-bg: #d6bcf5;
-  --sidebar-bg: #e4d7f5;
-  --sidebar-active: #d6bcf5;
-  --card-bg: #ffffff;
+  --body-bg: #f3e1f5;          /* light pastel pink background */
+  --sidebar-bg: #e6d7f7;       /* pastel sidebar */
+  --sidebar-active: #d6bcf5;   /* active menu highlight */
+  --card-bg: #ffffff;           /* card background remains white for contrast */
   --card-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
-  --text-color: #3a3a3a;
-  --text-color-light: #6b6b6b;
+  --text-color: #3a1f6e;       /* dark purple text for readability */
+  --text-color-light: #6b4fa8; /* lighter purple text for secondary text */
 
   /* Card pastel colors */
   --analytics-color: #fddde6;
@@ -33,10 +33,11 @@ body {
 }
 
 /* Sidebar */
+/* Sidebar */
 .sidebar {
   width: var(--sidebar-width);
-  background-color: var(--sidebar-bg);
-  box-shadow: var(--card-shadow);
+  background-color: #123c5a; /* Dark blue sidebar */
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
   display: flex;
   flex-direction: column;
   padding: 30px 20px;
@@ -45,15 +46,26 @@ body {
   left: 0;
   height: 100%;
   border-radius: 0 20px 20px 0;
-  transition: width 225ms var(--transition-func);
+  transition: width 0.3s ease, transform 0.3s ease;
   overflow-y: auto;
+}
+
+.sidebar.closed {
+  width: 0;
+  overflow: hidden;
+  transform: translateX(-100%);
+}
+
+.sidebar.open {
+  width: var(--sidebar-width);
+  transform: translateX(0);
 }
 
 .sidebar-title {
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 50px;
-  color: #3a3a3a;
+  color: #ffffff; /* white text */
 }
 
 .sidebar-menu {
@@ -68,21 +80,20 @@ body {
   border-radius: 12px;
   cursor: pointer;
   font-weight: 500;
-  color: var(--text-color);
-  transition: background-color 225ms var(--transition-func), transform 225ms var(--transition-func);
+  color: #ffffff; /* white text for sidebar items */
+  transition: background-color 225ms cubic-bezier(0.4, 0, 0.2, 1), transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-item:hover {
-  background-color: #e9d9f8;
+  background-color: #1f6f8b; /* lighter blue on hover */
   transform: translateX(4px);
 }
 
 .sidebar-item.active {
-  background-color: var(--sidebar-active);
-  color: #3a1f6e;
+  background-color: #1f6f8b; /* lighter blue active item */
+  color: #ffffff;
   font-weight: 600;
 }
-
 /* Main content */
 .dashboard-layout {
   margin-left: var(--sidebar-width);
@@ -94,7 +105,7 @@ body {
   font-size: 2.2rem;
   font-weight: 700;
   margin-bottom: 35px;
-  color: #3a3a3a;
+  color: var(--text-color);
 }
 
 .dashboard-grid {
@@ -134,4 +145,3 @@ body {
 .card-reports { background-color: var(--reports-color); }
 .card-tasks { background-color: var(--tasks-color); }
 .card-settings { background-color: var(--settings-color); }
-

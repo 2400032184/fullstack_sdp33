@@ -25,18 +25,14 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // ✅ Email validation
+    //Email validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(formData.email)) {
       alert("Please enter a valid email address (e.g. user@example.com)");
       return;
     }
 
-<<<<<<< HEAD
-    //  Password validation
-=======
-    // ✅ Password validation
->>>>>>> 585b72d6918f295391735207687755fbb6c4beec
+    //Password validation
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordPattern.test(formData.password)) {
@@ -46,24 +42,25 @@ const SignUp = () => {
       return;
     }
 
-    // ✅ Confirm password check
+    //Confirm password check
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    // ✅ Terms check
+    //Terms check
     if (!formData.terms) {
       alert("Please agree to the terms and conditions!");
       return;
     }
 
-    // ✅ Store user
+    //Store user
     const storedUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
 
-    // Check if username or email already exists
     const userExists = storedUsers.some(
-      (user) => user.username === formData.username || user.email === formData.email
+      (user) =>
+        user.username === formData.username ||
+        user.email === formData.email
     );
 
     if (userExists) {
@@ -148,7 +145,9 @@ const SignUp = () => {
               />
               <span
                 className="toggle-icon"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -162,11 +161,14 @@ const SignUp = () => {
                 onChange={handleChange}
                 required
               />
-              <label htmlFor="terms">I agree to the terms and conditions</label>
+              <label htmlFor="terms">
+                I agree to the terms and conditions
+              </label>
             </div>
 
             <button type="submit">Sign Up</button>
           </form>
+
           <p className="signin-link">
             Already have an account? <a href="/Login">Login</a>
           </p>
@@ -185,8 +187,8 @@ const SignUp = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-          min-height: 100vh;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
+          min-height: 90vh;
+          background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
           padding: 0 20px;
           box-sizing: border-box;
         }
@@ -195,11 +197,11 @@ const SignUp = () => {
           background: #ffffff;
           padding: 40px 30px;
           border-radius: 15px;
-          max-width: 500px;
+          max-width: 600px;
           width: 100%;
-          box-shadow: 0 0 20px rgba(0,0,0,0.2);
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
           text-align: center;
-          color: #000;
+          color: #000000;
         }
 
         .signup-container h1 {
@@ -271,7 +273,7 @@ const SignUp = () => {
           padding: 12px;
           border-radius: 8px;
           border: none;
-          background: #28a745;
+          background: #123c5a;
           color: #fff;
           font-weight: bold;
           cursor: pointer;
@@ -280,7 +282,7 @@ const SignUp = () => {
         }
 
         .signup-form button:hover {
-          background: #218838;
+          background: #1f6f8b;
         }
 
         .signin-link {
@@ -289,7 +291,7 @@ const SignUp = () => {
         }
 
         .signin-link a {
-          color: #28a745;
+          color: #123c5a;
           text-decoration: underline;
         }
 

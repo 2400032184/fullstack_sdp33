@@ -1,158 +1,195 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 const History = () => {
-  const [cities, setCities] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
 
-  // Function to load cities from localStorage
-  const loadCities = () => {
-    const storedCities = JSON.parse(localStorage.getItem("searchedCities")) || [];
-    // Reverse to show recent first
-    setCities(storedCities.slice().reverse());
+  const loadFeedbacks = () => {
+    const storedFeedbacks =
+      JSON.parse(localStorage.getItem("userFeedbacks")) || [];
+
+    setFeedbacks(storedFeedbacks.slice().reverse());
   };
 
   useEffect(() => {
-    loadCities();
-
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      loadCities();
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
+    loadFeedbacks();
   }, []);
 
-  // Clear all history
   const handleClearHistory = () => {
-    if (window.confirm("Are you sure you want to clear the history?")) {
-      localStorage.removeItem("searchedCities");
-      setCities([]);
+    if (
+      window.confirm(
+        "Are you sure you want to clear all submitted feedback history?"
+      )
+    ) {
+      localStorage.removeItem("userFeedbacks");
+      setFeedbacks([]);
     }
   };
 
   return (
-    <div className="allcities-container">
-      <h1>Searched Cities</h1>
+    <div className="history-container">
+      <h1>Submitted Feedback History</h1>
 
-      {cities.length > 0 ? (
+      {feedbacks.length > 0 ? (
         <>
           <div style={{ marginBottom: "20px" }}>
             <button className="clear-btn" onClick={handleClearHistory}>
-              🗑️ Clear History
+              🗑️ Clear Feedback History
             </button>
           </div>
-          <div className="cities-grid">
-            {cities.map((city, index) => (
-              <div key={index} className="city-card">
-                <h2 className="city-title">{city.city}</h2>
-                <p className="city-state">State: {city.state}</p>
-                <p className="city-population">Population: {city.population}</p>
-                <p className="city-coordinates">
-                  Coordinates: {city.latitude}, {city.longitude}
+
+          <div className="feedback-grid">
+            {feedbacks.map((item, index) => (
+              <div key={index} className="feedback-card">
+                <h2 className="course-title">{item.course}</h2>
+
+                <p><strong>Instructor:</strong> {item.instructor}</p>
+                <p><strong>Name:</strong> {item.fullName}</p>
+                <p><strong>Register No:</strong> {item.registerNumber}</p>
+                <p><strong>Email:</strong> {item.email}</p>
+                <p><strong>Year/Sem:</strong> {item.year}</p>
+
+                {item.submittedAt && (
+                  <p>
+                    <strong>Submitted On:</strong>{" "}
+                    {new Date(item.submittedAt).toLocaleDateString()}
+                  </p>
+                )}
+
+                {/* ⭐ Star Ratings */}
+                {item.starRatings && (
+                  <div className="ratings-section">
+                    <strong>Star Ratings:</strong>
+                    <ul>
+                      {Object.entries(item.starRatings).map(
+                        ([key, value]) => (
+                          <li key={key}>
+                            {key}: {"★".repeat(value)} ({value}/5)
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Dropdown Options */}
+                {item.options && (
+                  <div className="ratings-section">
+                    <strong>Course Evaluation:</strong>
+                    <ul>
+                      {Object.entries(item.options).map(([key, value]) => (
+                        <li key={key}>
+                          {key}: {value}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <p className="comments">
+                  <strong>Best Part:</strong> {item.bestPart}
                 </p>
+
+                <p className="comments">
+                  <strong>Improvements Suggested:</strong> {item.improvement}
+                </p>
+
+                <p className="comments">
+                  <strong>Recommendation:</strong> {item.recommendation}
+                </p>
+
+                {item.additionalComments && (
+                  <p className="comments">
+                    <strong>Additional Comments:</strong>{" "}
+                    {item.additionalComments}
+                  </p>
+                )}
               </div>
             ))}
           </div>
         </>
       ) : (
-        <p className="no-cities">You have not searched any cities yet.</p>
+        <p className="no-feedback">No feedback submitted yet.</p>
       )}
 
-      <Link to="/Services" className="back-link">
-        ← Back to Services
-      </Link>
-
       <style>{`
-        .allcities-container {
+        .history-container {
           padding: 30px 20px;
           text-align: center;
           min-height: 100vh;
-          background: linear-gradient(135deg, #fdfcfb, #e2d1f9);
+          background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
           font-family: 'Roboto', sans-serif;
         }
 
         h1 {
           font-size: 2.5rem;
-          color: #4a148c;
+          color: #123c5a;
           margin-bottom: 30px;
         }
 
-        .cities-grid {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+        .feedback-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
           gap: 20px;
-          margin-bottom: 30px;
+          max-width: 1200px;
+          margin: 0 auto 30px;
         }
 
-        .city-card {
+        .feedback-card {
           background: #ffffff;
           padding: 25px 20px;
           border-radius: 20px;
           box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
-          max-width: 300px;
-          width: 100%;
-          text-align: center;
-          transition: transform 0.2s ease;
+          text-align: left;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .city-card:hover {
+        .feedback-card:hover {
           transform: translateY(-5px);
+          box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .city-title {
-          font-size: 1.8rem;
+        .course-title {
+          font-size: 1.6rem;
           font-weight: 700;
-          color: #7c3aed;
+          color: #1f6f8b;
           margin-bottom: 10px;
         }
 
-        .city-state,
-        .city-population,
-        .city-coordinates {
-          font-size: 1rem;
-          color: #555;
-          line-height: 1.5;
+        .ratings-section ul {
+          padding-left: 18px;
+          margin: 8px 0;
         }
 
-        .no-cities {
+        .ratings-section li {
+          font-size: 0.95rem;
+          color: #4a6572;
+        }
+
+        .comments {
+          margin-top: 8px;
+          font-style: italic;
+          color: #4a6572;
+        }
+
+        .no-feedback {
           font-size: 1.3rem;
-          color: #444;
-          margin-bottom: 20px;
-        }
-
-        .back-link {
-          display: inline-block;
-          padding: 12px 20px;
-          background-color: #d6bcf5;
-          color: #3a1f6e;
-          font-weight: 600;
-          border-radius: 12px;
-          text-decoration: none;
-          transition: background-color 0.3s ease;
-        }
-
-        .back-link:hover {
-          background-color: #c7aef2;
+          color: #123c5a;
         }
 
         .clear-btn {
           padding: 10px 16px;
-          background-color: #c384dfff;
-          color: white;
+          background-color: #1f6f8b;
+          color: #ffffff;
           border: none;
           border-radius: 8px;
           font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.3s ease;
+          transition: all 0.3s ease;
         }
 
         .clear-btn:hover {
-          background-color: #b83beeff;
+          background-color: #123c5a;
+          transform: translateY(-2px);
         }
       `}</style>
     </div>

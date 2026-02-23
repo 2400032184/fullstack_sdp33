@@ -1,48 +1,102 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import UserProfileContainer from "./UserProfileContainer";
-import LogoImage from "../styles/logo.jpeg"; // your logo image
+import AdminProfileContainer from "./AdminProfileContainer";
+import LogoImage from "../styles/feed.jpg"; // your logo image
 
 const Navbar = ({ toggleSidebar }) => {
-  const [showProfile, setShowProfile] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showAdminProfile, setShowAdminProfile] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentAdmin, setCurrentAdmin] = useState(null);
 
-  // Get current user from localStorage whenever needed
-  const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("currentUser"));
+  // Load accounts from localStorage
+  const loadAccounts = () => {
+    setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+    setCurrentAdmin(JSON.parse(localStorage.getItem("currentAdmin")));
   };
 
-  const currentUser = getCurrentUser();
+  useEffect(() => {
+    loadAccounts();
+
+    // Listen to changes in localStorage (logout from other tabs)
+    const handleStorageChange = () => loadAccounts();
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   return (
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <img src={LogoImage} alt="Logo" className="logo" onClick={toggleSidebar} />
-          <h2>Smart City App</h2>
+          <img
+            src={LogoImage}
+            alt="Logo"
+            className="logo"
+            onClick={toggleSidebar}
+          />
+          <h2>Student Feedback and Evaluation Portal</h2>
         </div>
 
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><Link to="/ContactUs">Contact Us</Link></li>
-          {!currentUser && <li><Link to="/SignUp">Sign Up</Link></li>}
+          {!currentUser && !currentAdmin && <li><Link to="/SignUp">Sign Up</Link></li>}
+
+          {/* User Profile */}
           {currentUser && (
             <li>
               <img
                 src={currentUser.profilePic || "https://via.placeholder.com/40"}
-                alt="Profile"
+                alt="User Profile"
                 className="nav-profile-pic"
-                onClick={() => setShowProfile(true)}
+                onClick={() => setShowUserProfile(true)}
               />
+            </li>
+          )}
+
+          {/* Admin Profile */}
+          {currentAdmin && (
+            <li>
+              <img
+                src={currentAdmin.profilePic || "https://via.placeholder.com/40"}
+                alt="Admin Profile"
+                className="nav-profile-pic"
+                onClick={() => setShowAdminProfile(true)}
+              />
+            </li>
+          )}
+
+          {/* Logout */}
+          {(currentUser || currentAdmin) && (
+            <li>
+              <Link
+                to="/Logout"
+                onClick={() => {
+                  setShowUserProfile(false);
+                  setShowAdminProfile(false);
+                }}
+              >
+                Logout
+              </Link>
             </li>
           )}
         </ul>
       </nav>
 
-      {showProfile && (
+      {/* Profile Popups */}
+      {showUserProfile && currentUser && (
         <UserProfileContainer
-          user={getCurrentUser()} // pass latest user
-          onClose={() => setShowProfile(false)}
+          user={currentUser}
+          onClose={() => setShowUserProfile(false)}
+        />
+      )}
+
+      {showAdminProfile && currentAdmin && (
+        <AdminProfileContainer
+          admin={currentAdmin}
+          onClose={() => setShowAdminProfile(false)}
         />
       )}
     </>

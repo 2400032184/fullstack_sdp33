@@ -4,7 +4,7 @@ import "./Home.css";
 import "./Navbar.css";
 
 const Home = () => {
-  const fullText = "Smart City Management";
+  const fullText = "Student Feedback and Evaluation Portal";
   const [typedText, setTypedText] = useState("");
   const [typingComplete, setTypingComplete] = useState(false); // track completion
 
@@ -50,8 +50,8 @@ const Home = () => {
               {typedText}
             </h1>
             <p>
-              Explore city services, report issues, and access essential urban
-              information seamlessly.
+              A platform for collecting and analyzing student feedback to improve educational quality.
+              Your voice matters — share feedback to build better learning
             </p>
             <a href="/login" className="btn-primary">
               Get Started
@@ -61,7 +61,7 @@ const Home = () => {
 
         <footer>
           <p>
-            &copy; {new Date().getFullYear()} Smart City Management. All Rights
+            &copy; {new Date().getFullYear()} Student Feedback and Evaluation Portal. All Rights
             Reserved.
           </p>
         </footer>

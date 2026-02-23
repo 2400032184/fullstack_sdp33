@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
-import AboutImage from "../styles/Homeimage.jpeg";
+import AboutImage from "../styles/linkd.png";
 
 const About = () => {
   return (
@@ -9,12 +9,16 @@ const About = () => {
       <div className="about-page">
         <div className="about-content-container">
           <div className="about-image-container">
-            <img src={AboutImage} alt="Smart City" className="about-image" />
+            <img src={AboutImage} alt="The Student Feedback and Evaluation Portal" className="about-image" />
           </div>
           <div className="about-text">
             <h1>About Us</h1>
             <p>
-              This smart city application is designed to simplify urban living by providing seamless access to city-related information and services. The platform allows citizens to explore public amenities, report issues, and access vital infrastructure details efficiently, while enabling city administrators to manage and update urban data effectively. By bridging the gap between city services and residents, it enhances transparency, responsiveness, and convenience, making cities more organized, connected, and user-friendly for everyone.
+              The Student Feedback and Evaluation Portal is a web-based application designed to collect, manage, and analyze student feedback on courses, instructors, and institutional services.
+
+Our platform provides a structured and secure way for students to share their opinions and experiences. The collected feedback is automatically analyzed to generate meaningful insights that help institutions improve teaching quality, course structure, and overall academic performance.
+
+We aim to create a transparent and efficient feedback system that bridges the gap between students and administration. By transforming feedback into actionable data, our system supports continuous improvement.
             </p>
           </div>
         </div>
@@ -25,7 +29,7 @@ const About = () => {
           display: flex;
           justify-content: center;
           align-items: center;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
+          background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
           min-height: 90vh;
           padding: 20px;
         }

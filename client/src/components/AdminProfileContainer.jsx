@@ -1,7 +1,7 @@
 import React from "react";
 
-const UserProfileContainer = ({ user, onClose }) => {
-  if (!user) return null; // in case no user is logged in
+const AdminProfileContainer = ({ admin, onClose }) => {
+  if (!admin) return null; // safety check
 
   return (
     <div className="profile-container-overlay">
@@ -9,7 +9,7 @@ const UserProfileContainer = ({ user, onClose }) => {
         <button className="close-btn" onClick={onClose}>×</button>
 
         <img
-          src={user.profilePic || "https://via.placeholder.com/120"}
+          src={admin.profilePic || "https://via.placeholder.com/120?text=Admin"}
           alt="Profile"
           style={{
             borderRadius: "50%",
@@ -20,30 +20,30 @@ const UserProfileContainer = ({ user, onClose }) => {
           }}
         />
 
-        <h2>{user.username}</h2>
-        <p><b>Name:</b> {user.name}</p>
-        <p><b>Register Number:</b> {user.registerNumber}</p>
-        <p><b>Email:</b> {user.email}</p>
-        <p><b>Age:</b> {user.age}</p>
-        <p><b>Gender:</b> {user.gender}</p>
-        <p><b>Phone:</b> {user.phone}</p>
-        <p><b>Address:</b> {user.address}</p>
-        <p><b>Blood Type:</b> {user.bloodType}</p>
-        <p><b>Marital Status:</b> {user.maritalStatus}</p>
-        <p><b>Institution:</b> {user.institution}</p>
-        <p><b>Academic Year:</b> {user.academicYear}</p>
-        <p><b>Department:</b> {user.department}</p>
+        <h2>{admin.username}</h2>
+        <p><b>Name:</b> {admin.name}</p>
+        <p><b>Email:</b> {admin.email}</p>
+        <p><b>Phone:</b> {admin.phone}</p>
+        <p><b>Employee ID:</b> {admin.employeeId}</p>
+        <p><b>Department:</b> {admin.department}</p>
+        <p><b>Workplace:</b> {admin.workplace}</p>
+        <p><b>Gender:</b> {admin.gender}</p>
+        <p><b>Blood Type:</b> {admin.bloodType}</p>
+        <p><b>Marital Status:</b> {admin.maritalStatus}</p>
 
-        <div>
-          <b>Languages Spoken ({user.languages.length}):</b>
-          <ul>
-            {user.languages.map((lang, index) => (
-              <li key={index}>{lang}</li>
-            ))}
-          </ul>
-        </div>
+        <p><b>Languages Known ({admin.languages?.length || 0}):</b></p>
+        <ul>
+          {admin.languages?.map((lang, index) => (
+            <li key={index}>{lang}</li>
+          ))}
+        </ul>
 
-        <p><b>Occupation:</b> {user.occupation}</p>
+        <p><b>Job Positions ({admin.jobPositions?.length || 0}):</b></p>
+        <ul>
+          {admin.jobPositions?.map((job, index) => (
+            <li key={index}>{job}</li>
+          ))}
+        </ul>
       </div>
 
       <style>{`
@@ -53,7 +53,7 @@ const UserProfileContainer = ({ user, onClose }) => {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(18, 60, 90, 0.4);
+    background: rgba(18, 60, 90, 0.4); /* darker blue overlay */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +61,7 @@ const UserProfileContainer = ({ user, onClose }) => {
   }
 
   .profile-container-card {
-    background: linear-gradient(135deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
+    background: linear-gradient(135deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7); /* blue gradient */
     padding: 30px;
     border-radius: 20px;
     max-width: 500px;
@@ -115,4 +115,4 @@ const UserProfileContainer = ({ user, onClose }) => {
   );
 };
 
-export default UserProfileContainer;
+export default AdminProfileContainer;

@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar";
-import ContactImage from "../styles/contact.jpg";
+import ContactImage from "../styles/contact.jpeg";
 
 const ContactUs = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Show popup
+    setShowPopup(true);
+
+    // Hide popup after 3 seconds
+    setTimeout(() => setShowPopup(false), 3000);
+
+    // Reset the form fields
+    e.target.reset();
+  };
+
   return (
     <>
       <Navbar />
@@ -11,9 +26,13 @@ const ContactUs = () => {
           <h1 className="contact-heading">Contact Us</h1>
           <div className="contact-container">
             <div className="contact-image-container">
-              <img src={ContactImage} alt="Contact Us" className="contact-image" />
+              <img
+                src={ContactImage}
+                alt="Contact Us"
+                className="contact-image"
+              />
             </div>
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={handleSubmit}>
               <input type="text" placeholder="Name" required />
               <input type="email" placeholder="Email" required />
               <textarea placeholder="Message" required></textarea>
@@ -23,13 +42,22 @@ const ContactUs = () => {
         </div>
       </div>
 
+      {/* Centered Popup Notification */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-notification">
+            <p>Message sent successfully!</p>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .contact-page {
           display: flex;
           justify-content: center;
           align-items: center;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
-          min-height: 100vh;
+          background: linear-gradient(90deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
+          min-height: 90vh;
           width: 100%;
           text-align: center;
         }
@@ -95,7 +123,7 @@ const ContactUs = () => {
           padding: 12px;
           border-radius: 6px;
           border: none;
-          background: #28a745;
+          background: #123c5a;
           color: white;
           font-weight: bold;
           cursor: pointer;
@@ -104,7 +132,38 @@ const ContactUs = () => {
         }
 
         .contact-form button:hover {
-          background: #218838;
+          background: #1f6f8b;
+        }
+
+        /* Centered Popup Styles */
+        .popup-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: rgba(0,0,0,0.2);
+          z-index: 9999;
+        }
+
+        .popup-notification {
+          background: #1f6f8b;
+          color: white;
+          padding: 25px 40px;
+          border-radius: 12px;
+          font-size: 1.2rem;
+          font-weight: bold;
+          box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+          text-align: center;
+          animation: popupFade 0.3s ease-in-out;
+        }
+
+        @keyframes popupFade {
+          0% { transform: scale(0.8); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
         }
 
         @media (max-width: 768px) {
@@ -118,6 +177,11 @@ const ContactUs = () => {
 
           .contact-image {
             max-height: 250px;
+          }
+
+          .popup-notification {
+            padding: 20px 25px;
+            font-size: 1rem;
           }
         }
       `}</style>

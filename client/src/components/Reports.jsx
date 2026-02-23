@@ -24,53 +24,67 @@ const Reports = () => {
   const [ratingSummary, setRatingSummary] = useState([]);
   const [questionStats, setQuestionStats] = useState([]);
 
-  // Modern aesthetic pastel palette
   const COLORS = ["#6CCECB", "#FF9AA2", "#FFD6A5", "#B5EAD7", "#CBAACB", "#FFDAC1"];
 
   useEffect(() => {
-    const storedFeedbacks = JSON.parse(localStorage.getItem("userFeedbacks")) || [];
-    setFeedbacks(storedFeedbacks.reverse());
+    const storedFeedbacks =
+      JSON.parse(localStorage.getItem("userFeedbacks")) || [];
 
-    // Aggregate ratings for charts
+    setFeedbacks([...storedFeedbacks].reverse());
+
     const summary = {};
+
+    // ✅ Convert numeric ratings to categories
     storedFeedbacks.forEach((fb) => {
-      Object.entries(fb.ratings).forEach(([key, value]) => {
-        if (!summary[key])
-          summary[key] = { Excellent: 0, Good: 0, Average: 0, Poor: 0 };
-        summary[key][value] += 1;
+      Object.entries(fb.starRatings || {}).forEach(([question, rating]) => {
+        if (!summary[question]) {
+          summary[question] = {
+            Excellent: 0,
+            Good: 0,
+            Average: 0,
+            Poor: 0,
+          };
+        }
+
+        let category = "";
+
+        if (rating >= 5) category = "Excellent";
+        else if (rating === 4) category = "Good";
+        else if (rating === 3) category = "Average";
+        else category = "Poor";
+
+        summary[question][category] += 1;
       });
     });
 
-    const chartData = Object.entries(summary).map(([key, val]) => ({
-      category: key,
-      ...val,
+    const chartData = Object.entries(summary).map(([question, counts]) => ({
+      category: question,
+      ...counts,
     }));
+
     setRatingSummary(chartData);
 
-    // Prepare per-question stats for mini pie charts
-    const qStats = Object.entries(summary).map(([question, counts]) => {
-      const totalResponses = Object.values(counts).reduce((a, b) => a + b, 0);
-      const maxRating = Object.entries(counts).reduce((a, b) =>
+    // ✅ Majority calculation per question
+    const stats = Object.entries(summary).map(([question, counts]) => {
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+      const majority = Object.entries(counts).reduce((a, b) =>
         b[1] > a[1] ? b : a
       )[0];
-      const stars = { Excellent: 5, Good: 4, Average: 3, Poor: 2 }[maxRating] || 0;
-      const pieData = Object.entries(counts).map(([name, value]) => ({ name, value }));
-      return { question, total: totalResponses, answer: maxRating, stars, pieData };
+
+      const starMap = { Excellent: 5, Good: 4, Average: 3, Poor: 2 };
+
+      return {
+        question,
+        total,
+        majority,
+        stars: starMap[majority] || 0,
+      };
     });
-    setQuestionStats(qStats);
+
+    setQuestionStats(stats);
   }, []);
 
-  // Heatmap data (stacked bar style)
-  const heatmapData = ratingSummary.map((item, i) => ({
-    category: item.category,
-    Excellent: item.Excellent,
-    Good: item.Good,
-    Average: item.Average,
-    Poor: item.Poor,
-    value: item.Excellent + item.Good + item.Average + item.Poor,
-  }));
-
-  // Scatter plot data
   const scatterData = ratingSummary.map((item, i) => ({
     x: i + 1,
     y: item.Excellent + item.Good + item.Average + item.Poor,
@@ -85,11 +99,11 @@ const Reports = () => {
 
         {feedbacks.length > 0 ? (
           <>
-            {/* Charts Section */}
             <div className="charts-container">
-              {/* Bar Chart */}
+
+              {/* BAR CHART */}
               <div className="chart-card">
-                <h2>Feedback Ratings - Bar Chart</h2>
+                <h2>Feedback Ratings - Question Wise</h2>
                 <BarChart width={500} height={300} data={ratingSummary}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
@@ -103,35 +117,39 @@ const Reports = () => {
                 </BarChart>
               </div>
 
-              {/* Pie Chart */}
+              {/* PIE CHART */}
               <div className="chart-card">
-                <h2>Overall Feedback Distribution - Pie Chart</h2>
+                <h2>Overall Rating Distribution</h2>
                 <PieChart width={400} height={300}>
                   <Pie
                     data={[
                       {
                         name: "Excellent",
-                        value: feedbacks.filter((fb) =>
-                          Object.values(fb.ratings).includes("Excellent")
-                        ).length,
+                        value: ratingSummary.reduce(
+                          (sum, q) => sum + q.Excellent,
+                          0
+                        ),
                       },
                       {
                         name: "Good",
-                        value: feedbacks.filter((fb) =>
-                          Object.values(fb.ratings).includes("Good")
-                        ).length,
+                        value: ratingSummary.reduce(
+                          (sum, q) => sum + q.Good,
+                          0
+                        ),
                       },
                       {
                         name: "Average",
-                        value: feedbacks.filter((fb) =>
-                          Object.values(fb.ratings).includes("Average")
-                        ).length,
+                        value: ratingSummary.reduce(
+                          (sum, q) => sum + q.Average,
+                          0
+                        ),
                       },
                       {
                         name: "Poor",
-                        value: feedbacks.filter((fb) =>
-                          Object.values(fb.ratings).includes("Poor")
-                        ).length,
+                        value: ratingSummary.reduce(
+                          (sum, q) => sum + q.Poor,
+                          0
+                        ),
                       },
                     ]}
                     cx="50%"
@@ -139,16 +157,19 @@ const Reports = () => {
                     outerRadius={100}
                     label
                   >
-                    {COLORS.map((color, index) => (
-                      <Cell key={index} fill={color} />
-                    ))}
+                    {["Excellent", "Good", "Average", "Poor"].map(
+                      (entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                      )
+                    )}
                   </Pie>
+                  <Tooltip />
                 </PieChart>
               </div>
 
-              {/* Line Chart */}
+              {/* LINE CHART */}
               <div className="chart-card">
-                <h2>Feedback Trends - Line Chart</h2>
+                <h2>Rating Trends Per Question</h2>
                 <LineChart width={500} height={300} data={ratingSummary}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="category" />
@@ -162,83 +183,60 @@ const Reports = () => {
                 </LineChart>
               </div>
 
-              {/* Heatmap Section */}
+              {/* SCATTER */}
               <div className="chart-card">
-                <h2>Heatmap - Ratings Distribution</h2>
-                <BarChart width={500} height={300} data={heatmapData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="category" />
-                  <YAxis />
-                  <Tooltip />
-                  {["Excellent", "Good", "Average", "Poor"].map((key, i) => (
-                    <Bar key={i} dataKey={key} fill={COLORS[i]} />
-                  ))}
-                </BarChart>
-              </div>
-
-              {/* Scatter Plot */}
-              <div className="chart-card">
-                <h2>Scatter Plot - Total Responses vs Question Index</h2>
+                <h2>Total Responses per Question</h2>
                 <ScatterChart width={500} height={300}>
                   <CartesianGrid />
                   <XAxis type="number" dataKey="x" name="Question Index" />
                   <YAxis type="number" dataKey="y" name="Total Responses" />
                   <ZAxis dataKey="z" range={[60, 400]} />
-                  <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+                  <Tooltip />
                   <Scatter data={scatterData} fill={COLORS[4]} />
                 </ScatterChart>
               </div>
             </div>
 
-            {/* Question Summary Section */}
+            {/* SUMMARY SECTION */}
             <div className="summary-section">
-              <h2>Per-Question Feedback Summary</h2>
-              {questionStats.map((item, idx) => (
-                <div key={idx} className="summary-card">
+              <h2>Overall Question Analysis</h2>
+              {questionStats.map((q, index) => (
+                <div key={index} className="summary-card">
                   <div className="summary-left">
-                    <p>
-                      <strong>Question:</strong> {item.question}
-                    </p>
-                    <p>
-                      <strong>Most Common Answer:</strong> {item.answer}{" "}
-                      <span className="stars">
-                        {"★".repeat(item.stars)}
-                        {"☆".repeat(5 - item.stars)}
-                      </span>
-                    </p>
-                    <p>
-                      <strong>Total Responses:</strong> {item.total}
-                    </p>
+                    <strong>{q.question}</strong>
+                    <p>Total Responses: {q.total}</p>
+                    <p>Majority Rating: {q.majority}</p>
                   </div>
                   <div className="summary-right">
-                    <h4>Distribution:</h4>
-                    <PieChart width={120} height={120}>
-                      <Pie
-                        data={item.pieData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={50}
-                        label
-                      >
-                        {item.pieData.map((entry, index) => (
-                          <Cell key={index} fill={COLORS[index]} />
-                        ))}
-                      </Pie>
-                    </PieChart>
+                    <p className="stars">
+                      {"★".repeat(q.stars)}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Suggestions Section */}
+            {/* STUDENT SUGGESTIONS */}
             <div className="suggestions-section">
-              <h2>User Suggestions & Comments</h2>
+              <h2>Student Suggestions</h2>
               {feedbacks.map((fb, idx) => (
                 <div key={idx} className="suggestion-card">
-                  <p>
-                    <strong>{fb.fullName}</strong> ({fb.date}, {fb.location})
-                  </p>
-                  <p>{fb.comments}</p>
+                  <p><strong>{fb.fullName}</strong></p>
+
+                  {fb.bestPart && (
+                    <p><strong>Best Part:</strong> {fb.bestPart}</p>
+                  )}
+
+                  {fb.improvement && (
+                    <p><strong>Improvement:</strong> {fb.improvement}</p>
+                  )}
+
+                  {fb.additionalComments && (
+                    <p>
+                      <strong>Additional Comments:</strong>{" "}
+                      {fb.additionalComments}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

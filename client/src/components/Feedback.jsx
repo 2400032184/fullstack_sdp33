@@ -1,127 +1,186 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-const Feedback = () => {
-  const navigate = useNavigate();
+const Feedback = ({ course }) => {
+  const defaultStarCategories = [
+    "Course Content Quality",
+    "Faculty Teaching Effectiveness",
+    "Practical / Lab Sessions",
+    "Class Engagement",
+    "Overall Satisfaction",
+  ];
+
+  const defaultOptions = [
+    { key: "CourseStructure", label: "Course Structure was", choices: ["Very Well Organized","Organized","Average","Poorly Structured"] },
+    { key: "SyllabusCoverage", label: "Syllabus Coverage", choices: ["Completed Fully","Mostly Covered","Partially Covered","Insufficient"] },
+    { key: "FacultySupport", label: "Faculty Support Outside Class", choices: ["Very Supportive","Supportive","Sometimes Available","Not Available"] },
+    { key: "Infrastructure", label: "Classroom & Infrastructure", choices: ["Excellent","Good","Average","Needs Improvement"] },
+    { key: "AssignmentQuality", label: "Assignments & Assessments", choices: ["Very Relevant","Relevant","Moderate","Not Useful"] },
+  ];
+
+  const [starCategories, setStarCategories] = useState(defaultStarCategories);
+  const [options, setOptions] = useState(defaultOptions);
+  const [ratings, setRatings] = useState({});
+
+  useEffect(() => {
+    const loadForm = () => {
+      const savedForm = JSON.parse(localStorage.getItem("adminFeedbackForm"));
+      setStarCategories(savedForm?.starCategories || defaultStarCategories);
+      setOptions(savedForm?.options || defaultOptions);
+    };
+
+    loadForm();
+    window.addEventListener("feedbackFormUpdated", loadForm);
+    return () => window.removeEventListener("feedbackFormUpdated", loadForm);
+  }, []);
+
+  const handleRating = (category, value) => {
+    setRatings({ ...ratings, [category]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Collect feedback from form fields
     const feedback = {
-      fullName: e.target[0].value,
-      contact: e.target[1].value,
-      date: e.target[2].value,
-      location: e.target[3].value,
-      groupSize: e.target[4].value,
-      ratings: {
-        Infrastructure: e.target[5].value,
-        Facilities: e.target[6].value,
-        Cleanliness: e.target[7].value,
-        Safety: e.target[8].value,
-        Accessibility: e.target[9].value,
-      },
-      comments: e.target[10].value,
+      course: course?.title || "N/A",
+      instructor: course?.instructor || "N/A",
+      fullName: e.target.fullName.value,
+      registerNumber: e.target.registerNumber.value,
+      email: e.target.email.value,
+      year: e.target.year.value,
+      starRatings: ratings,
+      options: Object.fromEntries(options.map(o => [o.key, e.target[o.key]?.value])),
+      bestPart: e.target.bestPart.value,
+      improvement: e.target.improvement.value,
+      recommendation: e.target.recommendation.value,
+      additionalComments: e.target.additionalComments.value,
     };
 
-    // Get existing feedbacks from localStorage
     const storedFeedbacks = JSON.parse(localStorage.getItem("userFeedbacks")) || [];
-
-    // Add new feedback
     storedFeedbacks.push(feedback);
-
-    // Save updated feedback list
     localStorage.setItem("userFeedbacks", JSON.stringify(storedFeedbacks));
 
-    // Redirect to thank you page
-    navigate("/Thank");
+    alert("⭐ Feedback submitted successfully!");
+    e.target.reset();
+    setRatings({});
   };
 
   return (
     <div className="feedback-container">
-      <h1 className="feedback-title">Your Feedback Matters</h1>
-      <p className="feedback-subtitle">
-        Help us improve the <b>Smart City experience</b> by sharing your valuable feedback.
-      </p>
+      <h1 className="feedback-title">Student Course Feedback Form</h1>
+
+      {course && (
+        <div className="course-info">
+          <strong>Course:</strong> {course.title} <br />
+          <strong>Instructor:</strong> {course.instructor}
+        </div>
+      )}
 
       <form className="feedback-form" onSubmit={handleSubmit}>
         <label>
           Full Name:
-          <input type="text" placeholder="Enter your full name" required />
+          <input name="fullName" type="text" required />
         </label>
 
         <label>
-          Email address and/or Phone number:
-          <input type="text" placeholder="Enter email or phone" required />
+          Register Number:
+          <input name="registerNumber" type="text" required />
         </label>
 
         <label>
-          Date of Feedback:
-          <input type="date" required />
+          Email:
+          <input name="email" type="email" required />
         </label>
 
         <label>
-          Location/Area Visited:
-          <input type="text" placeholder="e.g., Smart Park, Downtown Hub" required />
+          Year / Semester:
+          <input name="year" type="text" required />
+        </label>
+
+        <h2>⭐ Rate the Following:</h2>
+
+        {starCategories.map((category) => (
+          <div key={category} className="star-rating-block">
+            <p>{category}</p>
+            <div className="stars">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`star ${ratings[category] >= star ? "active" : ""}`}
+                  onClick={() => handleRating(category, star)}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <h2>Course & Faculty Evaluation</h2>
+
+        {options.map(({ key, label, choices }) => (
+          <label key={key}>
+            {label}
+            <select name={key} required>
+              <option value="">Select</option>
+              {choices.map((c, i) => <option key={i}>{c}</option>)}
+            </select>
+          </label>
+        ))}
+
+        <label>
+          What did you like most about the course?
+          <textarea name="bestPart" required />
         </label>
 
         <label>
-          Number of People in Your Group:
-          <input type="number" placeholder="e.g., 2" min="1" required />
+          What improvements would you suggest?
+          <textarea name="improvement" required />
         </label>
-
-        <h2 className="rating-heading">Please rate the following:</h2>
-        <div className="ratings-grid">
-          {["Infrastructure", "Facilities", "Cleanliness", "Safety", "Accessibility"].map(
-            (item) => (
-              <label key={item}>
-                {item}
-                <select required>
-                  <option value="">Select</option>
-                  <option>Excellent</option>
-                  <option>Good</option>
-                  <option>Average</option>
-                  <option>Poor</option>
-                </select>
-              </label>
-            )
-          )}
-        </div>
 
         <label>
-          Your Comments or Suggestions:
-          <textarea placeholder="Share your thoughts..." required></textarea>
+          Would you recommend this course?
+          <select name="recommendation" required>
+            <option value="">Select</option>
+            <option>Definitely Yes</option>
+            <option>Yes</option>
+            <option>Maybe</option>
+            <option>No</option>
+          </select>
         </label>
 
-        <button type="submit" className="submit-btn">Submit Feedback</button>
+        <label>
+          Additional Comments:
+          <textarea name="additionalComments" />
+        </label>
+
+        <button type="submit" className="submit-btn">
+          Submit Feedback
+        </button>
       </form>
 
-      {/* Inline CSS */}
       <style>{`
         .feedback-container {
-          max-width: 800px;
+          max-width: 900px;
           margin: 50px auto;
           padding: 40px;
           border-radius: 20px;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.08);
           font-family: 'Roboto', sans-serif;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
-          color: #4a4a4a;
+          background: linear-gradient(90deg, #d9f1f7,#b6e0f0,#8fd3e8,#c3eaf7);
+          color: #123c5a;
         }
 
         .feedback-title {
           text-align: center;
           font-size: 2rem;
-          font-weight: 700;
           margin-bottom: 12px;
-          color: #000000ff;
         }
 
-        .feedback-subtitle {
+        .course-info {
           text-align: center;
+          margin-bottom: 25px;
           font-size: 1.1rem;
-          margin-bottom: 30px;
-          color: #000000ff;
+          color: #1f6f8b;
         }
 
         .feedback-form {
@@ -130,72 +189,48 @@ const Feedback = () => {
           gap: 20px;
         }
 
-        label {
-          display: flex;
-          flex-direction: column;
-          font-weight: 500;
-        }
+        label { display: flex; flex-direction: column; font-weight: 500; }
 
         input, select, textarea {
           margin-top: 8px;
           padding: 12px;
-          border: 1px solid #dcdcdc;
           border-radius: 12px;
-          font-size: 1rem;
+          border: 1px solid #1f6f8b;
           outline: none;
-          transition: all 0.3s ease;
-          background-color: #faf0f8;
+          font-size: 1rem;
+          background-color: #fff;
         }
 
-        input:focus, select:focus, textarea:focus {
-          border-color: #a78bfa;
-          box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
-          background-color: #fbfbfbff;
+        textarea { min-height: 100px; resize: vertical; }
+
+        .star-rating-block { margin-bottom: 15px; }
+
+        .stars { display: flex; gap: 8px; font-size: 1.8rem; cursor: pointer; }
+
+        .star {
+          color: #ccc;
+          transition: 0.2s;
         }
 
-        .rating-heading {
-          margin-top: 20px;
-          font-size: 1.3rem;
-          font-weight: 600;
-          color: #5e548e;
-        }
-
-        .ratings-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 20px;
-        }
-
-        textarea {
-          resize: vertical;
-          min-height: 100px;
+        .star.active {
+          color: #ffb400;
+          transform: scale(1.1);
         }
 
         .submit-btn {
           padding: 14px 22px;
-          background: linear-gradient(135deg, #a78bfa, #d6bcf5);
-          border: none;
           border-radius: 12px;
+          border: none;
+          background: linear-gradient(135deg, #1f6f8b,#123c5a);
           color: #fff;
-          font-size: 1.1rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: 0.3s ease;
         }
 
         .submit-btn:hover {
           transform: translateY(-2px);
-          background: linear-gradient(135deg, #7c3aed, #c084fc);
-        }
-
-        @media (max-width: 768px) {
-          .feedback-container {
-            padding: 25px;
-          }
-
-          .feedback-title {
-            font-size: 1.6rem;
-          }
+          background: linear-gradient(135deg, #123c5a,#0f2e44);
         }
       `}</style>
     </div>

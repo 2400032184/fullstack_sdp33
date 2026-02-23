@@ -67,109 +67,108 @@ const Users = () => {
       </div>
 
       <style>{`
-        .users-page {
-          padding: 40px 20px;
-          min-height: 100vh;
-          background: linear-gradient(135deg, #fce1f3, #e0f7fa);
-          text-align: center;
-          font-family: Arial, sans-serif;
-        }
+  .users-page {
+    padding: 40px 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d9f1f7, #b6e0f0, #8fd3e8, #c3eaf7);
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
 
-        h1 {
-          font-size: 2.5rem;
-          color: #4a148c;
-          margin-bottom: 10px;
-        }
+  h1 {
+    font-size: 2.5rem;
+    color: #123c5a;
+    margin-bottom: 10px;
+  }
 
-        .user-count {
-          font-size: 1.3rem;
-          color: #333;
-          margin-bottom: 20px;
-          font-weight: 500;
-        }
+  .user-count {
+    font-size: 1.3rem;
+    color: #1f6f8b;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
 
-        .edit-btn, .delete-btn {
-          padding: 10px 15px;
-          margin: 10px 5px;
-          font-size: 1rem;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: bold;
-        }
+  .edit-btn, .delete-btn {
+    padding: 10px 15px;
+    margin: 10px 5px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-        .edit-btn {
-          background-color: #7c3aed;
-          color: white;
-        }
+  .edit-btn {
+    background-color: #1f6f8b;
+    color: white;
+  }
 
-        .edit-btn:hover {
-          background-color: #5a1fae;
-        }
+  .edit-btn:hover {
+    background-color: #123c5a;
+  }
 
-        .delete-btn {
-          background-color: #e53935;
-          color: white;
-        }
+  .delete-btn {
+    background-color: #006994;
+    color: white;
+  }
 
-        .delete-btn:hover {
-          background-color: #ab000d;
-        }
+  .delete-btn:hover {
+    background-color: #004466;
+  }
 
-        .users-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 20px;
-          justify-items: center;
-        }
+  .users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
 
-        .user-card {
-          background: #fff;
-          padding: 25px;
-          border-radius: 15px;
-          box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-          width: 100%;
-          max-width: 300px;
-          text-align: left;
-          transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
-          cursor: ${editMode ? "pointer" : "default"};
-          border: 2px solid transparent;
-        }
+  .user-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 300px;
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+    border: 2px solid transparent;
+  }
 
-        .user-card.selected {
-          border: 2px solid #e53935;
-          box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
+  .user-card.selected {
+    border: 2px solid #006994;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
 
-        .user-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
+  .user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  }
 
-        .user-name {
-          font-size: 1.6rem;
-          font-weight: 700;
-          color: #7c3aed;
-          margin-bottom: 10px;
-        }
+  .user-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #123c5a;
+    margin-bottom: 10px;
+  }
 
-        .user-card p {
-          font-size: 1rem;
-          color: #333;
-          margin: 5px 0;
-        }
+  .user-card p {
+    font-size: 1rem;
+    color: #1f6f8b;
+    margin: 5px 0;
+  }
 
-        .no-users {
-          font-size: 1.3rem;
-          color: #555;
-        }
+  .no-users {
+    font-size: 1.3rem;
+    color: #123c5a;
+  }
 
-        @media (max-width: 500px) {
-          .users-page {
-            padding: 20px 10px;
-          }
-        }
-      `}</style>
+  @media (max-width: 500px) {
+    .users-page {
+      padding: 20px 10px;
+    }
+  }
+`}</style>
     </>
   );
 };

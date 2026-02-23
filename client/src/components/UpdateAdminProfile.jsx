@@ -8,26 +8,23 @@ const allLanguages = [
   "Russian","Arabic","Portuguese","Swahili","Turkish","Vietnamese","Dutch","Greek"
 ];
 
-const allOccupations = [
-  "Software Engineer","Doctor","Teacher","Student","Artist","Lawyer","Engineer",
-  "Nurse","Farmer","Scientist","Business Owner","Musician","Writer","Driver","Chef"
+const allJobPositions = [
+  "Professor","Associate Professor","Assistant Professor","Lecturer","Lab Assistant",
+  "Researcher","Administrator","Accountant","Librarian","Counselor","Registrar",
+  "Dean","Chancellor","Vice Chancellor"
 ];
 
 const allGenders = ["Male", "Female", "Other"];
 const allBloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const allMaritalStatus = ["Single", "Married", "Divorced", "Widowed"];
-const allInstitutions = ["KL University", "Osmania University", "JNTU", "IIT", "Other"];
-const allAcademicYears = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
-const allDepartments = [
-  "Computer Science","Mechanical","Electrical","Civil","Electronics","Chemical",
-  "IT","Biotechnology","Architecture","MBA","MCA","Other"
-];
 
-const UpdateUserProfile = () => {
+const UpdateAdminProfile = () => {
   const defaultData = {
     profilePic: "",
+    employeeId: "",
+    department: "",
+    workplace: "",
     username: "",
-    registerNumber: "",
     name: "",
     email: "",
     dob: "",
@@ -38,22 +35,20 @@ const UpdateUserProfile = () => {
     bloodType: "",
     maritalStatus: "",
     languages: [],
-    occupation: "",
-    institution: "",
-    academicYear: "",
-    department: "",
+    jobPositions: [],
   };
 
   const [formData, setFormData] = useState(defaultData);
 
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (currentUser) {
+    const savedAdmin = JSON.parse(localStorage.getItem("currentAdmin"));
+    if (savedAdmin) {
+      // Make sure arrays exist
       setFormData({
         ...defaultData,
-        ...currentUser,
-        languages: Array.isArray(currentUser.languages) ? currentUser.languages : [],
-        institution: currentUser.institution || "",
+        ...savedAdmin,
+        languages: Array.isArray(savedAdmin.languages) ? savedAdmin.languages : [],
+        jobPositions: Array.isArray(savedAdmin.jobPositions) ? savedAdmin.jobPositions : [],
       });
     }
   }, []);
@@ -65,12 +60,12 @@ const UpdateUserProfile = () => {
       const reader = new FileReader();
       reader.onload = () => setFormData(prev => ({ ...prev, [name]: reader.result }));
       reader.readAsDataURL(files[0]);
-    } else if (name === "languages") {
-      const currentArray = formData.languages || [];
+    } else if (name === "languages" || name === "jobPositions") {
+      const currentArray = formData[name] || [];
       if (checked) {
-        setFormData(prev => ({ ...prev, languages: [...currentArray, value] }));
+        setFormData(prev => ({ ...prev, [name]: [...currentArray, value] }));
       } else {
-        setFormData(prev => ({ ...prev, languages: currentArray.filter(l => l !== value) }));
+        setFormData(prev => ({ ...prev, [name]: currentArray.filter(item => item !== value) }));
       }
     } else if (name === "dob") {
       const birthDate = new Date(value);
@@ -88,18 +83,13 @@ const UpdateUserProfile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("currentUser", JSON.stringify(formData));
-
-    const users = JSON.parse(localStorage.getItem("registeredUsers")) || [];
-    const updatedUsers = users.map(u => u.username === formData.username ? { ...formData } : u);
-    localStorage.setItem("registeredUsers", JSON.stringify(updatedUsers));
-
-    alert("Profile updated successfully!");
+    localStorage.setItem("currentAdmin", JSON.stringify(formData));
+    alert("Admin profile updated successfully!");
   };
 
   return (
     <div className="update-profile-container">
-      <h1>Update Profile</h1>
+      <h1>Update Admin Profile</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Profile Picture:
@@ -109,20 +99,26 @@ const UpdateUserProfile = () => {
         <div className="row-fields">
           <div className="row-field">
             <label>
+              Employee ID:
+              <input type="text" name="employeeId" value={formData.employeeId} onChange={handleChange} />
+            </label>
+          </div>
+          <div className="row-field">
+            <label>
+              Department:
+              <input type="text" name="department" value={formData.department} onChange={handleChange} />
+            </label>
+          </div>
+          <div className="row-field">
+            <label>
+              Workplace:
+              <input type="text" name="workplace" value={formData.workplace} onChange={handleChange} />
+            </label>
+          </div>
+          <div className="row-field">
+            <label>
               Phone:
-              <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="Max 10 digits" />
-            </label>
-          </div>
-          <div className="row-field">
-            <label>
-              Date of Birth:
-              <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
-            </label>
-          </div>
-          <div className="row-field">
-            <label>
-              Age:
-              <input type="number" name="age" value={formData.age} readOnly />
+              <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="10 digits max" />
             </label>
           </div>
         </div>
@@ -138,13 +134,18 @@ const UpdateUserProfile = () => {
         </label>
 
         <label>
-          Register Number:
-          <input type="text" name="registerNumber" value={formData.registerNumber} onChange={handleChange} />
+          Email:
+          <input type="email" name="email" value={formData.email} onChange={handleChange} />
         </label>
 
         <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+          Date of Birth:
+          <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+        </label>
+
+        <label>
+          Age:
+          <input type="number" name="age" value={formData.age} readOnly />
         </label>
 
         <label>
@@ -177,53 +178,41 @@ const UpdateUserProfile = () => {
         </label>
 
         <label>
-          Institution:
-          <select name="institution" value={formData.institution} onChange={handleChange}>
-            <option value="">Select Institution</option>
-            {allInstitutions.map(inst => <option key={inst} value={inst}>{inst}</option>)}
-          </select>
-        </label>
-
-        <label>
-          Academic Year:
-          <select name="academicYear" value={formData.academicYear} onChange={handleChange}>
-            <option value="">Select Year</option>
-            {allAcademicYears.map(year => <option key={year} value={year}>{year}</option>)}
-          </select>
-        </label>
-
-        <label>
-          Department:
-          <select name="department" value={formData.department} onChange={handleChange}>
-            <option value="">Select Department</option>
-            {allDepartments.map(d => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </label>
-
-        <label>
           Languages:
           <div className="languages-box">
-            {allLanguages.map(lang => (
-              <label key={lang} className="language-item">
-                <input
-                  type="checkbox"
-                  name="languages"
-                  value={lang}
-                  checked={formData.languages.includes(lang)}
-                  onChange={handleChange}
-                />
-                <span>{lang}</span>
-              </label>
-            ))}
+            {(formData.languages || []).length >= 0 &&
+              allLanguages.map(lang => (
+                <label key={lang} className="language-item">
+                  <input
+                    type="checkbox"
+                    name="languages"
+                    value={lang}
+                    checked={formData.languages.includes(lang)}
+                    onChange={handleChange}
+                  />
+                  <span>{lang}</span>
+                </label>
+              ))}
           </div>
         </label>
 
         <label>
-          Occupation:
-          <select name="occupation" value={formData.occupation} onChange={handleChange}>
-            <option value="">Select Occupation</option>
-            {allOccupations.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
+          Job Positions:
+          <div className="languages-box">
+            {(formData.jobPositions || []).length >= 0 &&
+              allJobPositions.map(pos => (
+                <label key={pos} className="language-item">
+                  <input
+                    type="checkbox"
+                    name="jobPositions"
+                    value={pos}
+                    checked={formData.jobPositions.includes(pos)}
+                    onChange={handleChange}
+                  />
+                  <span>{pos}</span>
+                </label>
+              ))}
+          </div>
         </label>
 
         <button type="submit">Save Changes</button>
@@ -319,11 +308,11 @@ const UpdateUserProfile = () => {
         }
 
         .row-field {
-          flex: 1 1 30%;
+          flex: 1 1 45%;
         }
       `}</style>
     </div>
   );
 };
 
-export default UpdateUserProfile;
+export default UpdateAdminProfile;

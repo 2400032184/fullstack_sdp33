@@ -5,7 +5,7 @@
 .hero {
   background: 
     linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), /* Bright overlay */
-    url("../styles/navbar.jpeg") center center no-repeat;
+    url("../styles/back2.png") center center no-repeat;
   min-height: 100vh; /* full screen height */
   width: 100%;
   display: flex;
@@ -45,7 +45,7 @@
     0 0 5px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.521),
     0 0 20px rgba(0, 0, 0, 0.523),
-    0 0 30px rgba(157, 0, 255, 0.397);
+    0 0 30px rgba(29, 232, 250, 0.689);
 }
 
 
@@ -68,7 +68,7 @@
 }
 
 .btn-primary {
-  background: #0d81df;
+  background: #123c5a;
   color: white;
   padding: 12px 30px;
   border-radius: 8px;
@@ -78,7 +78,7 @@
 }
 
 .btn-primary:hover {
-  background: #c90fef;
+  background: #1f6f8b;
 }
 
 /* Services Section */
@@ -185,7 +185,7 @@
 footer {
   padding: 30px 0;
   text-align: center;
-  background: #340752;
+  background: #123c5a;
   color: #fffefe;
   font-family: "Times New Roman", Times, serif;
 }
